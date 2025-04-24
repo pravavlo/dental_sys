@@ -3,11 +3,13 @@ package edu.miu.cs489.service.impl;
 
 import edu.miu.cs489.dto.request.PatientRequestDto;
 import edu.miu.cs489.dto.response.PatientResponseDto;
+import edu.miu.cs489.exception.DataValidationException;
 import edu.miu.cs489.exception.ResourceNotFoundException;
 import edu.miu.cs489.mapper.PatientMapper;
 import edu.miu.cs489.model.Patient;
 import edu.miu.cs489.repository.PatientRepository;
 import edu.miu.cs489.service.PatientService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +23,20 @@ public class PatientServiceImpl implements PatientService {
     private final PatientMapper patientMapper;
 
     @Override
+    @Transactional
     public PatientResponseDto createPatient(PatientRequestDto patientRequestDto) {
+        System.out.println(patientRequestDto);
+
         Patient patient = patientMapper.patientRequestDtoToPatient(patientRequestDto);
-        Patient savedPatient = patientRepository.save(patient);
-        return patientMapper.patientToPatientResponseDto(savedPatient);
+        System.out.println("mmmmmmmmmmmmmmmmmm"+patient);
+
+
+        try {
+            Patient savedPatient = patientRepository.save(patient);
+            return patientMapper.patientToPatientResponseDto(savedPatient);
+        } catch (Exception e) {
+            throw new DataValidationException("Error creating patient: " + e.getMessage()); // Wrap for more context
+        }
     }
 
     @Override
@@ -48,18 +60,24 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @Transactional
     public PatientResponseDto updatePatient(Long id, PatientRequestDto patientRequestDto) {
         Patient existingPatient = patientRepository.findById(id)
                                                    .orElseThrow(() -> new ResourceNotFoundException("Patient not found with id: " + id));
 
         Patient updatedPatient = patientMapper.patientRequestDtoToPatient(patientRequestDto);
-        updatedPatient.setId(existingPatient.getId());
+        updatedPatient.setId(existingPatient.getId()); // Preserve the ID
 
-        Patient savedPatient = patientRepository.save(updatedPatient);
-        return patientMapper.patientToPatientResponseDto(savedPatient);
+        try {
+            Patient savedPatient = patientRepository.save(updatedPatient);
+            return patientMapper.patientToPatientResponseDto(savedPatient);
+        } catch (Exception e) {
+            throw new DataValidationException("Error updating patient: " + e.getMessage());
+        }
     }
 
     @Override
+    @Transactional
     public void deletePatient(Long id) {
         if (!patientRepository.existsById(id)) {
             throw new ResourceNotFoundException("Patient not found with id: " + id);

@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class DentistResponseDto {
     private Long id;
     private String dentistName;
+    private String dentistNumber;
+    private String specialization;
 }

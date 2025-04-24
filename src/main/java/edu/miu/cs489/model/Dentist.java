@@ -21,6 +21,9 @@ public class Dentist {
     @Column(name = "dentist_name", nullable = false)
     private String dentistName;
 
+    @Column(name = "specialization", nullable = false)
+    private String specialization;
+
     @OneToMany(mappedBy = "dentist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Appointment> appointments = new ArrayList<>();
 }

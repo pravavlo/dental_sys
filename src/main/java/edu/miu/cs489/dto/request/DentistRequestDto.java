@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DentistRequestDto {
     private String dentistName;
+    private String specialization;
 }

@@ -22,15 +22,15 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
     runtimeOnly("com.mysql:mysql-connector-j")
-
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
 
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")

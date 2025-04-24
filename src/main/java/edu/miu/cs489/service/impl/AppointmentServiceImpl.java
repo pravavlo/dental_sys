@@ -157,13 +157,11 @@ package edu.miu.cs489.service.impl;
 import edu.miu.cs489.dto.request.AppointmentRequestDto;
 import edu.miu.cs489.dto.response.AppointmentResponseDto;
 import edu.miu.cs489.dto.response.DentistResponseDto;
-import edu.miu.cs489.dto.response.PatientResponseDto;
-import edu.miu.cs489.dto.response.SurgeryResponseDto;
+
 import edu.miu.cs489.exception.ResourceNotFoundException;
 import edu.miu.cs489.mapper.AddressMapper;
 import edu.miu.cs489.mapper.PatientMapper;
 import edu.miu.cs489.mapper.SurgeryMapper;
-import edu.miu.cs489.mapper.SurgeryMapperImpl;
 import edu.miu.cs489.model.Appointment;
 import edu.miu.cs489.model.Dentist;
 import edu.miu.cs489.model.Patient;
@@ -215,7 +213,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         return new DentistResponseDto(
                 dentist.getId(),
-                dentist.getDentistName()
+                dentist.getDentistName(), dentist.getSpecialization()
         );
     }
 

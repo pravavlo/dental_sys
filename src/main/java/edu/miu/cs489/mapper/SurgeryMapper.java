@@ -13,8 +13,6 @@ import java.util.List;
 public interface SurgeryMapper {
     Surgery surgeryRequestDtoToSurgery(SurgeryRequestDto surgeryRequestDto);
 
-    SurgeryRequestDto surgeryToSurgeryRequestDto(Surgery surgery);
-
     SurgeryResponseDto surgeryToSurgeryResponseDto(Surgery surgery);
 
     List<SurgeryResponseDto> surgeriesToSurgeryResponseDtos(List<Surgery> surgeries);

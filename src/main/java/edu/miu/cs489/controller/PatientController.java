@@ -19,6 +19,8 @@ public class PatientController {
 
     @PostMapping
     public ResponseEntity<PatientResponseDto> createPatient(@RequestBody PatientRequestDto patientRequestDto) {
+        System.out.println(patientRequestDto);
+
         return new ResponseEntity<>(patientService.createPatient(patientRequestDto), HttpStatus.CREATED);
     }
 

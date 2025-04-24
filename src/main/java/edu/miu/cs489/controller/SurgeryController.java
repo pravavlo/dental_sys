@@ -21,6 +21,7 @@ public class SurgeryController {
 
     @PostMapping
     public ResponseEntity<SurgeryResponseDto> createSurgery(@RequestBody SurgeryRequestDto surgeryRequestDto) {
+        System.out.println("i have entered ,,,,,,,,,,,,,,,,,,,,,,"+surgeryRequestDto);
         return new ResponseEntity<>(surgeryService.createSurgery(surgeryRequestDto), HttpStatus.CREATED);
     }
 

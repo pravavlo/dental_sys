@@ -21,7 +21,7 @@ public class Surgery {
     @Column(name = "surgery_no", nullable = false, unique = true)
     private String surgeryNo;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 

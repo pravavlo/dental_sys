@@ -20,6 +20,7 @@ public class DentistController {
 
     @PostMapping
     public ResponseEntity<DentistResponseDto> createDentist(@RequestBody DentistRequestDto dentistRequestDto) {
+        System.out.println(dentistRequestDto);
         return new ResponseEntity<>(dentistService.createDentist(dentistRequestDto), HttpStatus.CREATED);
     }
 

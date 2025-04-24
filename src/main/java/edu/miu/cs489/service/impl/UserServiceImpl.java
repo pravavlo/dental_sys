@@ -13,6 +13,7 @@ import edu.miu.cs489.repository.UserRepository;
 import edu.miu.cs489.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,30 +27,39 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 //    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         User user = userMapper.toEntity(userRequestDto);
-
-//        if (userRequestDto.getRole() != null && !userRequestDto.getRole().isEmpty()) {
-//            RoleType roleType;
-//            try {
-//                roleType = RoleType.valueOf(userRequestDto.getRole());
-//            } catch (IllegalArgumentException e) {
-//                throw new ResourceNotFoundException("Invalid role: " + userRequestDto.getRole());
-//            }
-//
-//            Role role = roleRepository.findByName(roleType)
-//                                      .orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + roleType.name()));
-//            user.setRole(role);
-//        } else {
-//            throw new ResourceNotFoundException("Role must be provided");
-//        }
-
+        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         User savedUser = userRepository.save(user);
         return userMapper.userToUserResponseDto(savedUser);
     }
+
+//    @Override
+//    @Transactional
+//    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+//        User user = userMapper.toEntity(userRequestDto);
+//
+////        if (userRequestDto.getRole() != null && !userRequestDto.getRole().isEmpty()) {
+////            RoleType roleType;
+////            try {
+////                roleType = RoleType.valueOf(userRequestDto.getRole());
+////            } catch (IllegalArgumentException e) {
+////                throw new ResourceNotFoundException("Invalid role: " + userRequestDto.getRole());
+////            }
+////
+////            Role role = roleRepository.findByName(roleType)
+////                                      .orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + roleType.name()));
+////            user.setRole(role);
+////        } else {
+////            throw new ResourceNotFoundException("Role must be provided");
+////        }
+//
+//        User savedUser = userRepository.save(user);
+//        return userMapper.userToUserResponseDto(savedUser);
+//    }
 
     @Override
     @Transactional

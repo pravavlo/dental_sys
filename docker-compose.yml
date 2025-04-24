@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: lab6
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: dental_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_APPLICATION_NAME: lab6
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/lab6
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
+      JWT_SECRET: mySuperSecretKeyForJWTGeneration123
+      JWT_EXPIRATION: 3600000
+
+volumes:
+  mysql_data:

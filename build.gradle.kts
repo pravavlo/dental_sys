@@ -31,6 +31,8 @@ dependencies {
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
     runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("org.postgresql:postgresql:42.7.3")
+
 
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -39,6 +41,11 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 }
 
 tasks.test {

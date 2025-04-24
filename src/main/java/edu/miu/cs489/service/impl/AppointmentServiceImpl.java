@@ -213,7 +213,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         return new DentistResponseDto(
                 dentist.getId(),
-                dentist.getDentistName(), dentist.getSpecialization()
+                dentist.getDentistName(),
+                dentist.getSpecialization()
         );
     }
 

@@ -7,8 +7,8 @@ WORKDIR /app
 # Add a volume (optional for devtools/hot reload)
 VOLUME /tmp
 
-# Copy the built jar file
-COPY build/libs/*.jar app.jar
+# Copy the built jar file which is created by running ./gradlew build in terminal
+COPY build/libs/AdventisDentalMgmtApplication-1.0-SNAPSHOT.jar app.jar
 
 # Expose Spring Boot default port
 EXPOSE 8080

@@ -33,4 +33,7 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "surgery_id", nullable = false)
     private Surgery surgery;
+
+    @Column(nullable = false)
+    private boolean paid = false;
 }

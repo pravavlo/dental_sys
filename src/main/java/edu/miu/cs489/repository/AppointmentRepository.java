@@ -20,4 +20,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findBySurgery(Surgery surgery);
 
     List<Appointment> findByAppointmentDate(LocalDate date);
+    List<Appointment> findByDentistAndAppointmentDateBetween(Dentist dentist, LocalDate start, LocalDate end);
+    boolean existsByPatientAndPaidFalse(Patient patient);
+
 }

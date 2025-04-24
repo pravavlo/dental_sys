@@ -15,5 +15,7 @@ public class AppointmentRequestDto {
     private LocalTime appointmentTime;
     private Long patientId;
     private Long dentistId;
-    private SurgeryRequestDto surgeryRequestDto;
+    private Long surgeryId ;
+    private boolean paid;
 }
+

@@ -20,6 +20,8 @@ public class Dentist {
 
     @Column(name = "dentist_name", nullable = false)
     private String dentistName;
+    @Column(name = "dentist_number", unique = true, nullable = false)
+    private String dentistNumber;
 
     @Column(name = "specialization", nullable = false)
     private String specialization;

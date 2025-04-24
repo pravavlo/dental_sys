@@ -20,7 +20,7 @@ public ResponseEntity<ApiError> handleResourceNotFound(
             e.getMessage(),
             request.getRequestURI(),
             HttpStatus.NOT_FOUND.value(),
-            Instant.now().toEpochMilli() // Use milliseconds for consistency
+            Instant.now().toEpochMilli()
     );
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
 }

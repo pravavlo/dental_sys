@@ -25,6 +25,7 @@ public class DentistController {
     }
 
     @GetMapping("/{id}")
+
     public ResponseEntity<DentistResponseDto> getDentistById(@PathVariable Long id) {
         return ResponseEntity.ok(dentistService.getDentistById(id));
     }

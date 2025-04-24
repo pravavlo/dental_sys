@@ -175,6 +175,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -187,7 +188,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final PatientRepository patientRepository;
     private final DentistRepository dentistRepository;
     private final SurgeryRepository surgeryRepository;
-    private final AddressMapper addressMapper;
     private final SurgeryMapper surgeryMapper;
     private final PatientMapper patientMapper;
 
@@ -199,9 +199,9 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.getId(),
                 appointment.getAppointmentDate(),
                 appointment.getAppointmentTime(),
-                patientMapper.patientToPatientResponseDto(appointment.getPatient()), // Use PatientMapper
+                patientMapper.patientToPatientResponseDto(appointment.getPatient()),
                 convertToDentistResponseDto(appointment.getDentist()),
-                surgeryMapper.surgeryToSurgeryResponseDto(appointment.getSurgery()) // Use SurgeryMapper
+                surgeryMapper.surgeryToSurgeryResponseDto(appointment.getSurgery())
         );
     }
 
@@ -213,13 +213,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         return new DentistResponseDto(
                 dentist.getId(),
-                dentist.getDentistName(), dentist.getSpecialization()
+                dentist.getDentistName(), dentist.getDentistNumber(), dentist.getSpecialization()
         );
     }
 
-    private Surgery convertToSurgeryEntity(AppointmentRequestDto appointmentRequestDto) {
-        return surgeryMapper.surgeryRequestDtoToSurgery(appointmentRequestDto.getSurgeryRequestDto());
-    }
 
     private Appointment convertToEntity(AppointmentRequestDto appointmentRequestDto, Patient patient, Dentist dentist, Surgery surgery) {
         Appointment appointment = new Appointment();
@@ -235,22 +232,34 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public AppointmentResponseDto createAppointment(AppointmentRequestDto appointmentRequestDto) {
-        // Set patient
+
         Patient patient = patientRepository.findById(appointmentRequestDto.getPatientId())
                                            .orElseThrow(() -> new ResourceNotFoundException("Patient not found with id: " + appointmentRequestDto.getPatientId()));
 
-        // Set dentist
+
         Dentist dentist = dentistRepository.findById(appointmentRequestDto.getDentistId())
                                            .orElseThrow(() -> new ResourceNotFoundException("Dentist not found with id: " + appointmentRequestDto.getDentistId()));
 
-        // Set surgery
-        Surgery surgery;
-        if (appointmentRequestDto.getSurgeryRequestDto().getSurgeryNo() != null) {
-            surgery = surgeryRepository.findBySurgeryNo(appointmentRequestDto.getSurgeryRequestDto().getSurgeryNo())
-                                       .orElseGet(() -> surgeryRepository.save(convertToSurgeryEntity(appointmentRequestDto)));
-        } else {
-            throw new IllegalArgumentException("Surgery number is required");
+
+        Surgery surgery = surgeryRepository.findById(appointmentRequestDto.getSurgeryId()).
+                                           orElseThrow(() -> new ResourceNotFoundException("Surgery not found with id: " + appointmentRequestDto.getSurgeryId()));
+
+        LocalDate appointmentDate = appointmentRequestDto.getAppointmentDate();
+        LocalDate startOfWeek = appointmentDate.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = appointmentDate.with(DayOfWeek.SUNDAY);
+
+        List<Appointment> weeklyAppointments = appointmentRepository.findByDentistAndAppointmentDateBetween(
+                dentist, startOfWeek, endOfWeek);
+
+        if (weeklyAppointments.size() >= 5) {
+            throw new IllegalStateException("Dentist already has 5 appointments in the given week.");
         }
+
+
+        if (appointmentRepository.existsByPatientAndPaidFalse(patient)) {
+            throw new IllegalStateException("Cannot create new appointment: unpaid bill exists.");
+        }
+
 
         Appointment appointment = convertToEntity(appointmentRequestDto, patient, dentist, surgery);
         Appointment savedAppointment = appointmentRepository.save(appointment);
@@ -329,18 +338,20 @@ public class AppointmentServiceImpl implements AppointmentService {
                                            .orElseThrow(() -> new ResourceNotFoundException("Dentist not found with id: " + appointmentRequestDto.getDentistId()));
         existingAppointment.setDentist(dentist);
 
-        // Update surgery
-        Surgery surgery;
-        if (appointmentRequestDto.getSurgeryRequestDto().getSurgeryNo() != null) {
-            surgery = surgeryRepository.findBySurgeryNo(appointmentRequestDto.getSurgeryRequestDto().getSurgeryNo())
-                                       .orElseGet(() -> surgeryRepository.save(convertToSurgeryEntity(appointmentRequestDto)));
-        } else {
-            throw new IllegalArgumentException("Surgery number is required");
-        }
+        // Update surgery using surgeryId
+        Surgery surgery = surgeryRepository.findById(appointmentRequestDto.getSurgeryId())
+                                           .orElseThrow(() -> new ResourceNotFoundException("Surgery not found with id: " + appointmentRequestDto.getSurgeryId()));
         existingAppointment.setSurgery(surgery);
 
         Appointment savedAppointment = appointmentRepository.save(existingAppointment);
         return convertToResponseDto(savedAppointment);
+    }
+@Override
+    public void markAppointmentAsPaid(Long id) {
+        Appointment appt = appointmentRepository.findById(id)
+                                                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+        appt.setPaid(true);
+        appointmentRepository.save(appt);
     }
 
     @Override

@@ -51,4 +51,17 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointmentsByDate(date));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
+        appointmentService.deleteAppointment(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/mark-paid")
+    public ResponseEntity<Void> markAppointmentAsPaid(@PathVariable Long id) {
+        appointmentService.markAppointmentAsPaid(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

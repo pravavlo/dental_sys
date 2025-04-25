@@ -7,6 +7,8 @@ import edu.miu.cs489.service.DentistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,10 +16,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/dentists")
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class DentistController {
 
     private final DentistService dentistService;
-
+    @PreAuthorize("hasRole('OFFICE_MANAGER')")
     @PostMapping
     public ResponseEntity<DentistResponseDto> createDentist(@RequestBody DentistRequestDto dentistRequestDto) {
         System.out.println(dentistRequestDto);
@@ -30,20 +33,26 @@ public class DentistController {
         return ResponseEntity.ok(dentistService.getDentistById(id));
     }
 
+    @PreAuthorize("hasRole('OFFICE_MANAGER')")
     @GetMapping("/name/{name}")
     public ResponseEntity<DentistResponseDto> getDentistByName(@PathVariable String name) {
         return ResponseEntity.ok(dentistService.getDentistByName(name));
     }
 
+    @PreAuthorize("hasRole('OFFICE_MANAGER')")
     @GetMapping
     public ResponseEntity<List<DentistResponseDto>> getAllDentists() {
         return ResponseEntity.ok(dentistService.getAllDentists());
     }
 
+
+    @PreAuthorize("hasRole('OFFICE_MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<DentistResponseDto> updateDentist(@PathVariable Long id, @RequestBody DentistRequestDto dentistRequestDto) {
         return ResponseEntity.ok(dentistService.updateDentist(id, dentistRequestDto));
     }
+
+    @PreAuthorize("hasRole('OFFICE_MANAGER')")
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDentist(@PathVariable Long id) {

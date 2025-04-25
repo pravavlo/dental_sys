@@ -28,7 +28,6 @@ public class PatientServiceImpl implements PatientService {
         System.out.println(patientRequestDto);
 
         Patient patient = patientMapper.patientRequestDtoToPatient(patientRequestDto);
-        System.out.println("mmmmmmmmmmmmmmmmmm"+patient);
 
 
         try {

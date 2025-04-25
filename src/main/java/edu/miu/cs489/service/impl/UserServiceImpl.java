@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +26,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 //    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
-
+    private final PasswordEncoder passwordEncoder;
     @Override
     @Transactional
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         User user = userMapper.toEntity(userRequestDto);
-
+        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
 //        if (userRequestDto.getRole() != null && !userRequestDto.getRole().isEmpty()) {
 //            RoleType roleType;
 //            try {

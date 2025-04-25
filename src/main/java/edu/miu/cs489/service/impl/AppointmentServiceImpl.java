@@ -173,6 +173,7 @@ import edu.miu.cs489.repository.SurgeryRepository;
 import edu.miu.cs489.service.AppointmentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -270,6 +271,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponseDto getAppointmentById(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
                                                        .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id: " + id));
+
         return convertToResponseDto(appointment);
     }
 

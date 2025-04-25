@@ -38,11 +38,20 @@ dependencies {
     runtimeOnly("com.h2database:h2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.bootJar {
+    archiveBaseName.set("myApp") //or you can use archiveBaseName="myapp"
+    archiveVersion="1.0.1"
+//    manifest{
+//        attributes["Main-Class"]="edu.miu.cs489.Main"
+//    }
 }
 
 repositories {

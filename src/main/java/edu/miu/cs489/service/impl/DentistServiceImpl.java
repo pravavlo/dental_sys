@@ -10,6 +10,9 @@ import edu.miu.cs489.repository.DentistRepository;
 import edu.miu.cs489.service.DentistService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,13 +55,18 @@ public class DentistServiceImpl implements DentistService {
             return dentistMapper.dentistToDentistResponseDto(dentist);
         }
 
-        @Override
-        public List<DentistResponseDto> getAllDentists() {
-            List<Dentist> dentists = dentistRepository.findAll();
-            return dentistMapper.dentistsToDentistResponseDtos(dentists);
-        }
+    @Override
+    public Page<DentistResponseDto> getAllDentists(Pageable pageable) {
+        Page<Dentist> dentistsPage = dentistRepository.findAll(pageable);
 
-        @Override
+        List<DentistResponseDto> dtoList = dentistMapper.dentistsToDentistResponseDtos(dentistsPage.getContent());
+
+        return new PageImpl<>(dtoList, pageable, dentistsPage.getTotalElements());
+    }
+
+
+
+    @Override
         @Transactional // Added for consistency and data integrity
         public DentistResponseDto updateDentist(Long id, DentistRequestDto dentistRequestDto) {
             Dentist existingDentist = dentistRepository.findById(id)

@@ -5,11 +5,16 @@ import edu.miu.cs489.dto.request.DentistRequestDto;
 import edu.miu.cs489.dto.response.DentistResponseDto;
 import edu.miu.cs489.service.DentistService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 
@@ -39,10 +44,10 @@ public class DentistController {
         return ResponseEntity.ok(dentistService.getDentistByName(name));
     }
 
-    @PreAuthorize("hasRole('OFFICE_MANAGER')")
+  @PreAuthorize("hasRole('OFFICE_MANAGER')")
     @GetMapping
-    public ResponseEntity<List<DentistResponseDto>> getAllDentists() {
-        return ResponseEntity.ok(dentistService.getAllDentists());
+    public ResponseEntity<Page<DentistResponseDto>> getAllDentists(Pageable pageable ) {
+        return ResponseEntity.ok(dentistService.getAllDentists(pageable));
     }
 
 

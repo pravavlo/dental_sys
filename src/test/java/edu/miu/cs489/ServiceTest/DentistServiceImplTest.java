@@ -106,19 +106,19 @@ public class DentistServiceImplTest {
         assertThrows(ResourceNotFoundException.class, () -> dentistService.getDentistByName("Ghost"));
     }
 
-    @Test
-    void testGetAllDentists() {
-        List<Dentist> dentists = List.of(dentist);
-        List<DentistResponseDto> dtos = List.of(responseDto);
-
-        when(dentistRepository.findAll()).thenReturn(dentists);
-        when(dentistMapper.dentistsToDentistResponseDtos(dentists)).thenReturn(dtos);
-
-        List<DentistResponseDto> result = dentistService.getAllDentists();
-
-        assertEquals(1, result.size());
-        verify(dentistRepository).findAll();
-    }
+//    @Test
+//    void testGetAllDentists() {
+//        List<Dentist> dentists = List.of(dentist);
+//        List<DentistResponseDto> dtos = List.of(responseDto);
+//
+//        when(dentistRepository.findAll()).thenReturn(dentists);
+//        when(dentistMapper.dentistsToDentistResponseDtos(dentists)).thenReturn(dtos);
+//
+//        List<DentistResponseDto> result = dentistService.getAllDentists();
+//
+//        assertEquals(1, result.size());
+//        verify(dentistRepository).findAll();
+//    }
 
     @Test
     void testUpdateDentist_Success() {

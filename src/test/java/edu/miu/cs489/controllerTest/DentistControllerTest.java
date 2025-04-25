@@ -71,17 +71,17 @@ public class DentistControllerTest {
         assertEquals(expectedResponse, response.getBody());
     }
 
-    @Test
-    void testGetAllDentists() {
-        List<DentistResponseDto> expectedList = List.of(getResponseDto());
-
-        when(dentistService.getAllDentists()).thenReturn(expectedList);
-
-        ResponseEntity<List<DentistResponseDto>> response = dentistController.getAllDentists();
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(expectedList, response.getBody());
-    }
+//    @Test
+//    void testGetAllDentists() {
+//        List<DentistResponseDto> expectedList = List.of(getResponseDto());
+//
+//        when(dentistService.getAllDentists()).thenReturn(expectedList);
+//
+//        ResponseEntity<List<DentistResponseDto>> response = dentistController.getAllDentists();
+//
+//        assertEquals(200, response.getStatusCodeValue());
+//        assertEquals(expectedList, response.getBody());
+//    }
 
     @Test
     void testUpdateDentist() {

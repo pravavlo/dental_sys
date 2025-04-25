@@ -6,6 +6,8 @@ import edu.miu.cs489.dto.response.DentistResponseDto;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 public interface DentistService {
     DentistResponseDto createDentist(DentistRequestDto dentistRequestDto);
 
@@ -13,7 +15,7 @@ public interface DentistService {
 
     DentistResponseDto getDentistByName(String name);
 
-    List<DentistResponseDto> getAllDentists();
+    Page<DentistResponseDto> getAllDentists(Pageable pageable);
 
     DentistResponseDto updateDentist(Long id, DentistRequestDto dentistRequestDto);
 

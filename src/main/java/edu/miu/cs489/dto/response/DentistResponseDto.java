@@ -12,4 +12,5 @@ public class DentistResponseDto {
     private String dentistName;
     private String dentistNumber;
     private String specialization;
+
 }
